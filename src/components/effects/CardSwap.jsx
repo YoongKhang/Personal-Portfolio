@@ -71,11 +71,16 @@ const CardSwap = ({
   const swapRef = useRef(null);
   const promoteRef = useRef(null);
   const hovered = useRef(new Set());
+  const restPos = useRef([]);
   const container = useRef(null);
 
   useEffect(() => {
     const total = refs.length;
-    refs.forEach((r, i) => placeNow(r.current, makeSlot(i, cardDistance, verticalDistance, total), skewAmount));
+    refs.forEach((r, i) => {
+      const slot = makeSlot(i, cardDistance, verticalDistance, total);
+      restPos.current[i] = slot;
+      placeNow(r.current, slot, skewAmount);
+    });
 
     const swap = () => {
       if (order.current.length < 2) return;
@@ -95,6 +100,7 @@ const CardSwap = ({
       rest.forEach((idx, i) => {
         const el = refs[idx].current;
         const slot = makeSlot(i, cardDistance, verticalDistance, refs.length);
+        restPos.current[idx] = slot;
         tl.set(el, { zIndex: slot.zIndex }, 'promote');
         tl.to(
           el,
@@ -110,6 +116,7 @@ const CardSwap = ({
       });
 
       const backSlot = makeSlot(refs.length - 1, cardDistance, verticalDistance, refs.length);
+      restPos.current[front] = backSlot;
       tl.addLabel('return', `promote+=${config.durMove * config.returnDelay}`);
       tl.call(
         () => {
@@ -149,6 +156,7 @@ const CardSwap = ({
         const el = refs[childIdx].current;
         if (!el) return;
         const slot = makeSlot(pos, cardDistance, verticalDistance, total);
+        restPos.current[childIdx] = slot;
         const lifted = hovered.current.has(childIdx);
         gsap.set(el, { zIndex: slot.zIndex });
         gsap.to(el, {
@@ -179,16 +187,18 @@ const CardSwap = ({
           ref: refs[i],
           style: { width, height, ...(child.props.style ?? {}) },
           onMouseEnter: () => {
-            // Lift the hovered card and keep it "hanging" in the air.
+            // Lift the hovered card to a fixed offset above its resting slot.
             hovered.current.add(i);
             const el = refs[i].current;
-            gsap.to(el, { y: '-=30', scale: 1.04, duration: 0.3, ease: 'power2.out' });
+            const rest = restPos.current[i] ?? { y: 0 };
+            gsap.to(el, { y: rest.y - 30, scale: 1.04, duration: 0.3, ease: 'power2.out', overwrite: 'auto' });
           },
           onMouseLeave: () => {
-            // Return it to its resting position.
+            // Return it to its exact resting slot (absolute, so no drift).
             hovered.current.delete(i);
             const el = refs[i].current;
-            gsap.to(el, { y: '+=30', scale: 1, duration: 0.3, ease: 'power2.out' });
+            const rest = restPos.current[i] ?? { y: 0 };
+            gsap.to(el, { y: rest.y, scale: 1, duration: 0.3, ease: 'power2.out', overwrite: 'auto' });
           },
           onClick: (e) => {
             child.props.onClick?.(e);
