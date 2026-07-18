@@ -152,11 +152,14 @@ const CardSwap = ({
           ref: refs[i],
           style: { width, height, ...(child.props.style ?? {}) },
           onMouseEnter: () => {
-            // Hover "jump" only on the front (clickable) card.
-            if (i === order.current[0]) {
-              const el = refs[i].current;
-              gsap.to(el, { y: '-=22', duration: 0.28, ease: 'power2.out', yoyo: true, repeat: 1 });
-            }
+            // Lift the hovered card and keep it "hanging" in the air.
+            const el = refs[i].current;
+            gsap.to(el, { y: '-=30', scale: 1.04, duration: 0.3, ease: 'power2.out' });
+          },
+          onMouseLeave: () => {
+            // Return it to its resting position.
+            const el = refs[i].current;
+            gsap.to(el, { y: '+=30', scale: 1, duration: 0.3, ease: 'power2.out' });
           },
           onClick: (e) => {
             child.props.onClick?.(e);
