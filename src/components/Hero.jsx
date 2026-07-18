@@ -1,20 +1,17 @@
 import { profile } from '../data/content'
 import BlurText from './effects/BlurText'
-import Aurora from './effects/Aurora'
 import AnimatedContent from './effects/AnimatedContent'
 
 export default function Hero() {
   return (
     <section id="about" className="relative flex min-h-screen items-center section-pad pt-32">
-      <Aurora />
       <div className="relative z-10 mx-auto grid w-full max-w-6xl items-center gap-12 md:grid-cols-2">
         <AnimatedContent className="order-2 md:order-1">
           <p className="mb-3 text-sm font-semibold uppercase tracking-[0.3em] text-cyan-300">
             {profile.subtitle}
           </p>
           <h1 className="text-4xl font-extrabold leading-tight sm:text-5xl lg:text-6xl">
-            <BlurText text="Welcome to my" className="block" />
-            <BlurText text="website." className="block accent-text" delay={0.08} />
+            <BlurText text="Welcome!" className="block" />
           </h1>
           <p className="mt-6 max-w-xl text-base text-white/70 sm:text-lg">{profile.intro}</p>
           <div className="mt-8 flex flex-wrap gap-4">

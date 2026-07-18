@@ -6,21 +6,25 @@ import Projects from './components/Projects'
 import Contact from './components/Contact'
 import Footer from './components/Footer'
 import BackToTop from './components/BackToTop'
+import Aurora from './components/effects/Aurora'
 
 export default function App() {
   return (
     <>
       <span id="top" />
-      <Navbar />
-      <main>
-        <Hero />
-        <Stats />
-        <Skills />
-        <Projects />
-        <Contact />
-      </main>
-      <Footer />
-      <BackToTop />
+      <Aurora />
+      <div className="relative z-10">
+        <Navbar />
+        <main>
+          <Hero />
+          <Stats />
+          <Skills />
+          <Projects />
+          <Contact />
+        </main>
+        <Footer />
+        <BackToTop />
+      </div>
     </>
   )
 }
