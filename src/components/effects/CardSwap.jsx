@@ -69,6 +69,8 @@ const CardSwap = ({
   const tlRef = useRef(null);
   const intervalRef = useRef();
   const swapRef = useRef(null);
+  const promoteRef = useRef(null);
+  const hovered = useRef(new Set());
   const container = useRef(null);
 
   useEffect(() => {
@@ -136,6 +138,31 @@ const CardSwap = ({
     // Expose swap so a card click can advance the stack manually.
     swapRef.current = swap;
 
+    // Bring the card at stack-position k straight to the front.
+    const promoteToFront = (k) => {
+      if (order.current.length < 2 || k <= 0) return;
+      const total = refs.length;
+      const arr = order.current;
+      const clicked = arr[k];
+      order.current = [clicked, ...arr.slice(0, k), ...arr.slice(k + 1)];
+      order.current.forEach((childIdx, pos) => {
+        const el = refs[childIdx].current;
+        if (!el) return;
+        const slot = makeSlot(pos, cardDistance, verticalDistance, total);
+        const lifted = hovered.current.has(childIdx);
+        gsap.set(el, { zIndex: slot.zIndex });
+        gsap.to(el, {
+          x: slot.x,
+          y: slot.y - (lifted ? 30 : 0),
+          z: slot.z,
+          scale: lifted ? 1.04 : 1,
+          duration: config.durMove,
+          ease: config.ease
+        });
+      });
+    };
+    promoteRef.current = promoteToFront;
+
     if (auto) {
       swap();
       intervalRef.current = window.setInterval(swap, delay);
@@ -153,19 +180,22 @@ const CardSwap = ({
           style: { width, height, ...(child.props.style ?? {}) },
           onMouseEnter: () => {
             // Lift the hovered card and keep it "hanging" in the air.
+            hovered.current.add(i);
             const el = refs[i].current;
             gsap.to(el, { y: '-=30', scale: 1.04, duration: 0.3, ease: 'power2.out' });
           },
           onMouseLeave: () => {
             // Return it to its resting position.
+            hovered.current.delete(i);
             const el = refs[i].current;
             gsap.to(el, { y: '+=30', scale: 1, duration: 0.3, ease: 'power2.out' });
           },
           onClick: (e) => {
             child.props.onClick?.(e);
             onCardClick?.(i);
-            // Advance the stack when the front card is clicked.
-            if (i === order.current[0]) swapRef.current?.();
+            // Bring the clicked card straight to the front.
+            const k = order.current.indexOf(i);
+            promoteRef.current?.(k);
           }
         })
       : child
