@@ -32,7 +32,7 @@ const CardSwap = ({
   cardDistance = 60,
   verticalDistance = 70,
   delay = 5000,
-  pauseOnHover = false,
+  auto = false,
   onCardClick,
   skewAmount = 6,
   easing = 'elastic',
@@ -68,6 +68,7 @@ const CardSwap = ({
 
   const tlRef = useRef(null);
   const intervalRef = useRef();
+  const swapRef = useRef(null);
   const container = useRef(null);
 
   useEffect(() => {
@@ -132,30 +133,17 @@ const CardSwap = ({
       });
     };
 
-    swap();
-    intervalRef.current = window.setInterval(swap, delay);
+    // Expose swap so a card click can advance the stack manually.
+    swapRef.current = swap;
 
-    if (pauseOnHover) {
-      const node = container.current;
-      const pause = () => {
-        tlRef.current?.pause();
-        clearInterval(intervalRef.current);
-      };
-      const resume = () => {
-        tlRef.current?.play();
-        intervalRef.current = window.setInterval(swap, delay);
-      };
-      node.addEventListener('mouseenter', pause);
-      node.addEventListener('mouseleave', resume);
-      return () => {
-        node.removeEventListener('mouseenter', pause);
-        node.removeEventListener('mouseleave', resume);
-        clearInterval(intervalRef.current);
-      };
+    if (auto) {
+      swap();
+      intervalRef.current = window.setInterval(swap, delay);
     }
+
     return () => clearInterval(intervalRef.current);
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [cardDistance, verticalDistance, delay, pauseOnHover, skewAmount, easing]);
+  }, [auto, cardDistance, verticalDistance, delay, skewAmount, easing]);
 
   const rendered = childArr.map((child, i) =>
     isValidElement(child)
@@ -163,9 +151,18 @@ const CardSwap = ({
           key: i,
           ref: refs[i],
           style: { width, height, ...(child.props.style ?? {}) },
-          onClick: e => {
+          onMouseEnter: () => {
+            // Hover "jump" only on the front (clickable) card.
+            if (i === order.current[0]) {
+              const el = refs[i].current;
+              gsap.to(el, { y: '-=22', duration: 0.28, ease: 'power2.out', yoyo: true, repeat: 1 });
+            }
+          },
+          onClick: (e) => {
             child.props.onClick?.(e);
             onCardClick?.(i);
+            // Advance the stack when the front card is clicked.
+            if (i === order.current[0]) swapRef.current?.();
           }
         })
       : child

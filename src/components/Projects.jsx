@@ -49,18 +49,20 @@ export default function Projects() {
     <section id="projects" className="section-pad">
       <AnimatedContent>
         <h2 className="section-title mb-3 text-center">Projects Showcases</h2>
-        <p className="mb-6 text-center text-white/50">A rotating look at what I&apos;ve built.</p>
+        <p className="mb-8 text-center text-white/50">
+          Hover a card to make it jump, and click it to flip to the next project.
+        </p>
       </AnimatedContent>
 
       <AnimatedContent className="flex justify-center" delay={0.1}>
-        <div className="relative h-[560px] w-full">
+        <div className="relative mx-auto mt-16 flex h-[660px] w-full items-center justify-center">
           <CardSwap
-            width="min(460px, 88vw)"
-            height={500}
-            cardDistance={50}
-            verticalDistance={60}
-            delay={4000}
-            pauseOnHover={true}
+            width="min(440px, 86vw)"
+            height={400}
+            cardDistance={48}
+            verticalDistance={45}
+            delay={5000}
+            auto={false}
             easing="elastic"
           >
             {projects.map((p) => (
