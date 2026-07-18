@@ -5,7 +5,7 @@ export const profile = {
   subtitle: 'Software Engineering Student & Web Developer',
   intro:
     'Currently Year 1 Software Engineer in Sunway University, passionate about creating innovative web solutions and software applications. I love turning complex problems into simple, beautiful, and intuitive designs.',
-  photo: '/images/yoongkhang.jpg',
+  photo: 'images/yoongkhang.jpg',
   email: 'chinyoongkhang@gmail.com',
   phone: '+60 18-966 3689',
   location: 'Sunway University, Malaysia',
@@ -30,7 +30,7 @@ export const projects = [
     title: 'Inventory Management System',
     description:
       'A Python-Based Inventory Management System that allow user to manage their items such as quantity and price.',
-    image: '/images/project1.png',
+    image: 'images/project1.png',
     repo: 'https://github.com/YoongKhang/PYTHON-BASED-E-COMMERCE-INVENTORY-MANAGEMENT-SYSTEM.git',
     demo: 'https://www.youtube.com/watch?v=Mby0-_QChaw',
   },
@@ -38,7 +38,7 @@ export const projects = [
     title: 'A Clothing Website',
     description:
       'A Modern and Responsive Clothing Website that allow user to browse and purchase clothing items.',
-    image: '/images/project2.png',
+    image: 'images/project2.png',
     repo: 'https://github.com/YoongKhang/Sakura-Clothing-Site',
     demo: 'https://youtu.be/zJqWPIsw0kM?si=RmiWMJpNV2FIA_Pg',
   },

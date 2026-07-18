@@ -41,7 +41,7 @@ export default function Hero() {
               style={{ animation: 'float-soft 6s ease-in-out infinite' }}
             >
               <img
-                src={profile.photo}
+                src={import.meta.env.BASE_URL + profile.photo}
                 alt={profile.name}
                 className="h-80 w-80 object-cover sm:h-96 sm:w-96"
               />

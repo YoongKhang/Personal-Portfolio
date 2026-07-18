@@ -2,9 +2,11 @@ import { defineConfig } from 'vite'
 import react from '@vitejs/plugin-react'
 import tailwindcss from '@tailwindcss/vite'
 
-// base: '' works for deployment at a domain root (Vercel/Netlify).
-// If deploying to GitHub Pages under /<repo>/, change to e.g. '/ChinYoongKhang_Portfolio/'.
+// GitHub Pages serves project sites under /<repo>/. Use that base only in CI;
+// keep base '/' for local dev so the app is served at the site root.
+const isGitHubPages = process.env.GITHUB_ACTIONS === 'true'
+
 export default defineConfig({
-  base: '',
+  base: isGitHubPages ? '/Personal-Portfolio/' : '/',
   plugins: [react(), tailwindcss()],
 })

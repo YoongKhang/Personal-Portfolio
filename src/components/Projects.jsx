@@ -14,7 +14,7 @@ export default function Projects() {
           <AnimatedContent key={p.title} delay={i * 0.08}>
             <TiltedCard className="glass h-full rounded-2xl p-5">
               <div className="overflow-hidden rounded-xl bg-white/5">
-                <img src={p.image} alt={p.title} className="h-52 w-full object-cover" loading="lazy" />
+                <img src={import.meta.env.BASE_URL + p.image} alt={p.title} className="h-52 w-full object-cover" loading="lazy" />
               </div>
               <h3 className="mt-4 text-lg font-bold text-pop">{p.title}</h3>
               <p className="mt-2 min-h-[3rem] text-sm text-white/60">{p.description}</p>

@@ -8,7 +8,7 @@ export default function Footer() {
       <div
         aria-hidden
         className="absolute inset-0 bg-cover bg-center opacity-30 blur-sm"
-        style={{ backgroundImage: "url('/images/footer.jpg')" }}
+        style={{ backgroundImage: `url(${import.meta.env.BASE_URL}images/footer.jpg)` }}
       />
       <div aria-hidden className="absolute inset-0 bg-ink/70" />
       <div className="relative z-10 mx-auto max-w-6xl px-6 py-14">
